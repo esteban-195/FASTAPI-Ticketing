@@ -1,5 +1,9 @@
 from fastapi import FastAPI
-from . import models, database, routes  # importa tus rutas existentes
+#from . import models, database, routes  # importa tus rutas existentes
+import models
+import database
+import routes
+
 import os
 
 # Crear las tablas si no existen
