@@ -1,3 +1,5 @@
+import os
+
 from datetime import datetime, timedelta
 from jose import jwt, JWTError
 from passlib.context import CryptContext
@@ -6,7 +8,6 @@ from fastapi.security import HTTPBearer
 from sqlalchemy.orm import Session
 from . import database, models
 
-import os
 print(os.getenv("SECRET_KEY"))
 
 SECRET_KEY = os.getenv("SECRET_KEY")
