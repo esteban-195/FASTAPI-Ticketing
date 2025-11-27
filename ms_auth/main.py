@@ -1,26 +1,28 @@
 from fastapi import FastAPI
-#from . import models, database, routes  # importa tus rutas existentes
-import models
-import database
-import routes
+from sqlalchemy.orm import Session
 
-import os
+# Imports relativos
+from . import models, database, routes
+from .database import engine
+from .models import Base
+from .utils import hash_password
+from .routes import router
+
 
 # Crear las tablas si no existen
-models.Base.metadata.create_all(bind=database.engine)
+Base.metadata.create_all(bind=engine)
 
 app = FastAPI(title="Authentication Microservice")
 
-# Incluir tus rutas
-app.include_router(routes.router)
+# Incluir las rutas
+app.include_router(router)
 
-# Crear admin inicial si no existe (opcional, para pruebas)
-from sqlalchemy.orm import Session
-from .utils import hash_password
 
+# Crear admin inicial si no existe (solo en desarrollo)
 def create_admin():
     db: Session = next(database.get_db())
     from .models import User
+
     if not db.query(User).filter(User.role == "admin").first():
         admin = User(
             name="Admin",
@@ -31,5 +33,6 @@ def create_admin():
         db.add(admin)
         db.commit()
         print("Admin creado: admin@admin.com / 123")
+
 
 create_admin()
